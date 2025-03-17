@@ -5,10 +5,11 @@ body {
   color: #f1f1f1;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   height: 100vh;
   margin: 0;
   font-smooth: always;
+  padding-top: 20px; /* добавлено отступ сверху */
 }
 
 .container {
@@ -19,6 +20,8 @@ body {
   text-align: center;
   width: 80%;
   max-width: 1200px;
+  overflow: auto; /* Прокрутка по необходимости */
+  max-height: 80vh; /* Максимальная высота контейнера */
 }
 
 h1 {
@@ -46,16 +49,20 @@ button:hover {
   background-color: #0056b3;
 }
 
-/* Стили для списка категорий */
+/* Стили для списка категорий, теперь категории идут в столбик */
 .tier-list {
   display: flex;
-  gap: 30px;
-  justify-content: center;
-  flex-wrap: wrap;
+  flex-direction: column; /* Перемещаем категории в столбик */
+  gap: 20px;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  max-height: 70vh; /* Ограничиваем высоту контейнера */
+  overflow-y: auto; /* Прокрутка вертикально, если слишком много категорий */
 }
 
 .tier {
-  width: 250px;
+  width: 100%; /* Категория будет занимать всю ширину контейнера */
+  max-width: 800px; /* Максимальная ширина категории */
   min-height: 350px;
   background: linear-gradient(to bottom, #ff6600, #ff9966);
   border-radius: 10px;
@@ -67,6 +74,7 @@ button:hover {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  overflow: hidden;
 }
 
 .tier h3 {
