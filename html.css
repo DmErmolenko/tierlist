@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Тир-лист аниме</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Тир-лист аниме</h1>
+
+    <div class="upload-section">
+      <input type="file" id="animeImageInput" accept="image/*">
+      <button id="addAnimeBtn">Добавить аниме</button>
+    </div>
+
+    <div id="animeTierList" class="tier-list">
+      <div class="tier" data-tier="S">S Tier</div>
+      <div class="tier" data-tier="A">A Tier</div>
+      <div class="tier" data-tier="B">B Tier</div>
+      <div class="tier" data-tier="C">C Tier</div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
