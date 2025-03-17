@@ -158,3 +158,17 @@ function loadTierData() {
 }
 
 // Генерация и скачивание JSON файла
+document.getElementById("downloadBtn").addEventListener("click", function() {
+  const jsonData = JSON.stringify(animeData, null, 2);
+  const blob = new Blob([jsonData], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "anime-tier-list.json";
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+// Инициализация
+loadTierData();
+
