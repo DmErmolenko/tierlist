@@ -1,59 +1,126 @@
+/* Основные стили для страницы */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f9;
+  font-family: 'Arial', sans-serif;
+  background-color: #f7f7f7;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   margin: 0;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .container {
-  width: 80%;
+  width: 90%;
   max-width: 1200px;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 h1 {
-  font-size: 2.5rem;
+  font-size: 3rem;
+  color: #333;
   margin-bottom: 20px;
+  font-weight: 600;
 }
 
 .upload-section {
-  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
 }
 
 input[type="file"] {
-  margin-right: 10px;
-}
-
-button {
-  padding: 10px 20px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
   font-size: 1rem;
   cursor: pointer;
 }
 
+button {
+  padding: 12px 20px;
+  border: none;
+  background-color: #4CAF50;
+  color: white;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+button:active {
+  background-color: #388e3c;
+}
+
+.category-controls {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.category-controls button {
+  background-color: #007BFF;
+}
+
+.category-controls button:hover {
+  background-color: #0056b3;
+}
+
+.category-controls button:active {
+  background-color: #004085;
+}
+
+/* Стили для списка категорий */
 .tier-list {
   display: flex;
-  justify-content: space-around;
-  margin-top: 20px;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 30px;
 }
 
 .tier {
-  width: 200px;
-  min-height: 200px;
   background-color: #e0e0e0;
-  border: 1px solid #ccc;
   border-radius: 10px;
-  padding: 10px;
+  width: 220px;
+  min-height: 300px;
+  padding: 20px;
   text-align: center;
+  position: relative;
+  border: 1px solid #ccc;
+  transition: background-color 0.3s;
   overflow: hidden;
+}
+
+.tier:hover {
+  background-color: #f0f0f0;
+}
+
+.tier h3 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  font-weight: 600;
 }
 
 .tier img {
   width: 100%;
-  height: auto;
+  max-height: 150px;
+  object-fit: cover;
   margin-bottom: 10px;
+  border-radius: 8px;
 }
 
 .tier[data-tier="S"] {
@@ -70,4 +137,62 @@ button {
 
 .tier[data-tier="C"] {
   background-color: #ff6666;
+}
+
+/* Кнопка удаления категории */
+.remove-category-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #ff4444;
+  border: none;
+  color: white;
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.remove-category-btn:hover {
+  background-color: #ff2222;
+}
+
+.remove-category-btn:active {
+  background-color: #cc0000;
+}
+
+/* Стили для анимированных элементов */
+.anime-item {
+  background-color: #ffffff;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+}
+
+.anime-item img {
+  border-radius: 8px;
+  max-height: 120px;
+  width: 100%;
+  object-fit: cover;
+}
+
+.anime-item:hover {
+  transform: translateY(-5px);
+}
+
+/* Анимация для загрузки аниме */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.tier, .anime-item {
+  animation: fadeIn 0.5s ease-in-out;
 }
