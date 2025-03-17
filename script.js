@@ -1,39 +1,160 @@
-// Слушатель события для добавления аниме
-document.getElementById("addAnimeBtn").addEventListener("click", function() {
-  const fileInput = document.getElementById("animeImageInput");
-  const file = fileInput.files[0];
+let categories = ["S", "A", "B", "C"];
+let animeData = {
+  S: [],
+  A: [],
+  B: [],
+  C: []
+};
 
-  if (!file) {
-    alert("Пожалуйста, выберите файл.");
-    return;
+// Обновление интерфейса с категориями
+function updateCategories() {
+  const tierListContainer = document.getElementById("animeTierList");
+  tierListContainer.innerHTML = "";
+
+  categories.forEach(category => {
+    const tier = document.createElement("div");
+    tier.classList.add("tier");
+    tier.setAttribute("data-tier", category);
+
+    const title = document.createElement("h3");
+    title.textContent = `${category} Tier`;
+    tier.appendChild(title);
+
+    // Кнопка для добавления аниме в категорию
+    const addButton = document.createElement("button");
+    addButton.textContent = "Добавить аниме";
+    addButton.onclick = () => addAnime(category);
+    tier.appendChild(addButton);
+
+    // Добавление кнопки для изменения категории
+    const editButton = document.createElement("button");
+    editButton.textContent = "Изменить категорию";
+    editButton.onclick = () => editCategoryName(category);
+    tier.appendChild(editButton);
+
+    // Кнопка для удаления категории
+    const removeButton = document.createElement("button");
+    removeButton.textContent = "Удалить категорию";
+    removeButton.onclick = () => removeCategory(category);
+    tier.appendChild(removeButton);
+
+    // Добавляем аниме в категорию
+    animeData[category].forEach(item => {
+      const animeElement = document.createElement("div");
+      animeElement.classList.add("anime-item");
+      
+      const imgElement = document.createElement("img");
+      imgElement.src = item.src;
+      imgElement.alt = item.alt;
+      animeElement.appendChild(imgElement);
+      
+      tier.appendChild(animeElement);
+    });
+
+    tierListContainer.appendChild(tier);
+  });
+
+  // Инициализация перетаскивания с помощью Sortable.js
+  new Sortable(tierListContainer, {
+    group: "anime-tiers",
+    draggable: ".anime-item",
+    onEnd(evt) {
+      const movedItem = evt.item;
+      const sourceCategory = evt.from.getAttribute("data-tier");
+      const targetCategory = evt.to.getAttribute("data-tier");
+
+      if (sourceCategory !== targetCategory) {
+        // Перемещение аниме между категориями
+        const movedAnime = animeData[sourceCategory].find(item => item.src === movedItem.querySelector("img").src);
+        animeData[sourceCategory] = animeData[sourceCategory].filter(item => item.src !== movedAnime.src);
+        animeData[targetCategory].push(movedAnime);
+        saveTierData();
+      }
+    }
+  });
+}
+
+// Функция для добавления категории
+document.getElementById("addCategoryBtn").addEventListener("click", function() {
+  const newCategory = prompt("Введите название новой категории:");
+  if (newCategory && !categories.includes(newCategory)) {
+    categories.push(newCategory);
+    animeData[newCategory] = [];
+    updateCategories();
+  } else {
+    alert("Эта категория уже существует или неверное имя!");
   }
+});
 
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const imgElement = document.createElement("img");
-    imgElement.src = e.target.result;
-    imgElement.alt = file.name;
+// Функция для редактирования названия категории
+function editCategoryName(category) {
+  const newCategoryName = prompt("Введите новое название категории:", category);
+  if (newCategoryName && !categories.includes(newCategoryName)) {
+    categories = categories.map(cat => cat === category ? newCategoryName : cat);
+    animeData[newCategoryName] = animeData[category];
+    delete animeData[category];
+    updateCategories();
+  } else {
+    alert("Невозможно изменить название категории!");
+  }
+}
 
-    // Создаем элемент аниме
-    const animeElement = document.createElement("div");
-    animeElement.classList.add("anime-item");
-    animeElement.appendChild(imgElement);
+// Функция для удаления категории
+function removeCategory(category) {
+  if (categories.length > 1) {
+    categories = categories.filter(cat => cat !== category);
+    delete animeData[category];
+    updateCategories();
+  } else {
+    alert("Невозможно удалить последнюю категорию!");
+  }
+}
 
-    // Добавляем в первый доступный Tier (по умолчанию "S")
-    const firstTier = document.querySelector('[data-tier="S"]');
-    firstTier.appendChild(animeElement);
+// Функция для добавления аниме
+function addAnime(category) {
+  const fileInput = document.createElement("input");
+  fileInput.type = "file";
+  fileInput.accept = "image/*";
+
+  fileInput.onchange = () => {
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+      const imgElement = new Image();
+      imgElement.src = e.target.result;
+
+      imgElement.onload = function() {
+        const anime = {
+          src: e.target.result,
+          alt: file.name
+        };
+        
+        animeData[category].push(anime);
+        updateCategories();
+        saveTierData();
+      };
+    };
+
+    reader.readAsDataURL(file);
   };
-  reader.readAsDataURL(file);
-});
 
-// Инициализация перетаскивания с помощью SortableJS
-new Sortable(document.getElementById("animeTierList"), {
-  group: "anime-tiers",
-  draggable: ".anime-item",
-  onStart(evt) {
-    evt.from.style.background = "#f0f0f0";
-  },
-  onEnd(evt) {
-    evt.from.style.background = "";
+  fileInput.click();
+}
+
+// Сохранение данных в LocalStorage
+function saveTierData() {
+  localStorage.setItem("animeData", JSON.stringify(animeData));
+}
+
+// Загрузка данных при старте
+function loadTierData() {
+  const savedData = localStorage.getItem("animeData");
+  if (savedData) {
+    animeData = JSON.parse(savedData);
+    categories = Object.keys(animeData);
   }
-});
+  updateCategories();
+}
+
+// Генерация и скачивание JSON файла
